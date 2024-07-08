@@ -22,26 +22,22 @@ def run_arcgis_code(username_v, passwort_v):
     try:
         # Initialisiere GIS
         gis = GIS(username=username_v, password=passwort_v)
-        st.write(1)  # Streamlit-Ausgabe
         # Zugriff auf die Tabelle mit der Item ID
         item_id = "97780b8cac26484fbe561f3c59732435"
         table_item = gis.content.get(item_id)
 
         # Holen der Tabelle aus dem Item
         table_layer = table_item.tables[0]
-        st.write(2)  # Streamlit-Ausgabe
         # Abfragen aller Features aus der Tabelle
         features = table_layer.query()
 
         # Konvertieren der Features in ein Spatially Enabled DataFrame (SDF)
         sdf = features.sdf
-        st.write(3)  # Streamlit-Ausgabe
         # Konvertieren des Spatially Enabled DataFrame (SDF) in ein pandas DataFrame
         df = pd.DataFrame(sdf)
 
         # Anwenden der Parkplatzfunktion auf jede Zeile
         df['Parkplatz'] = df.apply(lambda row: parking(row['category'], row['Area_srf']), axis=1)
-        st.write(4)  # Streamlit-Ausgabe
         # Aktualisieren der Features in der Tabelle mit den neuen 'Parkplatz' Werten
         updated_features = []
         for idx, row in df.iterrows():
@@ -51,10 +47,10 @@ def run_arcgis_code(username_v, passwort_v):
 
         # Anwenden der Updates auf die Tabelle
         table_layer.edit_features(updates=updated_features)
-        st.write(5)  # Streamlit-Ausgabe
+
 
         # Anzeigen des aktualisierten DataFrames
-        st.write(df)
+        #st.write(df)
         return True
 
     except Exception as e:
@@ -68,8 +64,8 @@ st.title("ArcGIS Parkplatzberechnung")
 username_v = st.text_input("Benutzername")
 passwort_v = st.text_input("Passwort", type="password")
 
-if st.button('ArcGIS Code ausführen'):
+if st.button('Parkplätze berechnen'):
     if run_arcgis_code(username_v, passwort_v):
-        st.success("ArcGIS Code erfolgreich ausgeführt.")
+        st.success("Parkplätze erfolgreich berechnet.")
     else:
         st.error("Ungültiger Benutzername oder Passwort. Bitte versuche es erneut.")
