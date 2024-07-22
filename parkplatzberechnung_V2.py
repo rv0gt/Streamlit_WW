@@ -99,7 +99,7 @@ if st.session_state.df is not None:
     df_update = st.session_state.df[columns_to_display]
     df_update = st.data_editor(df_update)
 
-    if st.button("Parkplätze aktualisieren:"):
+    if st.button("Parkplätze aktualisieren"):
         st.session_state.edited_df = berechne_parkplaetze(df_update)
         #st.session_state.data = st.session_state.edited_df  # Aktualisiere die originalen Daten mit den bearbeiteten
         st.success("Parkplätze erfolgreich berechnet und Daten aktualisiert.")
